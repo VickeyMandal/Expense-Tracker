@@ -1,7 +1,7 @@
 from tkinter import *
 import mysql.connector
 from mysql.connector import Error
-# from login import *
+from validate import validate
 from PIL import Image
 
 # def init():
@@ -20,48 +20,50 @@ from PIL import Image
 # 	except:
 # 		print("error occured")
 
-conn = mysql.connector.connect(host = "localhost", user = "root" , passwd = "2812" )
-if conn.is_connected():
-	db_info=conn.get_server_info()
-	print("Connected to mysql server version: ",db_info)
-	cursor=conn.cursor()
-	cursor.execute("create database if not exists expense")
-	cursor.execute("use expense")
-	cursor.execute("select database()")
-	record=cursor.fetchone()
-	print("you are connected to database",record)
-	cursor.execute("create table if not exists users (id int(11) not null AUTO_INCREMENT PRIMARY KEY,user_name varchar(255),password varchar(255))")
-else:
-	print("Connection Failed!")
+# conn = mysql.connector.connect(host = "localhost", user = "root" , passwd = "2812" )
+# if conn.is_connected():
+# 	db_info=conn.get_server_info()
+# 	print("Connected to mysql server version: ",db_info)
+# 	cursor=conn.cursor()
+# 	cursor.execute("create database if not exists expense")
+# 	cursor.execute("use expense")
+# 	cursor.execute("select database()")
+# 	record=cursor.fetchone()
+# 	print("you are connected to database",record)
+# 	cursor.execute("create table if not exists users (id int(11) not null AUTO_INCREMENT PRIMARY KEY,user_name varchar(255),password varchar(255))")
+# else:
+# 	print("Connection Failed!")
 
 
-def login_btn():
-	user=userfld.get()
-	passw=passwfld.get()
-	validate(user,passw)
+# def login_btn():
+# 	user=userfld.get()
+# 	passw=passwfld.get()
+# 	validate(user,passw)
 
-def register_btn():
-	window.destroy()
-	import register
+# def register_btn():
+# 	window.destroy()
+# 	import register
 
-def validate(user,passw):
-	cursor.execute("SELECT user_name,password FROM users")
-	try:
-		for(usern,passwrd) in cursor:
-			if user==usern and passw==passwrd:
-				validate=True
-			else:
-				validate=False
-	except Error as e:
-		print("Error occured")
+# def validate(user,passw):
+# 	cursor.execute("SELECT user_name,password FROM users")
+# 	try:
+# 		for(usern,passwrd) in cursor:
+# 			if user==usern and passw==passwrd:
+# 				validate=True
+# 			else:
+# 				validate=False
+# 	except Error as e:
+# 		print("Error occured")
 
-	if validate==True:
-		print("Greatt")
-		window.destroy()
-		import dashboard
-	elif validate==False:
-		print("try again")
+# 	if validate==True:
+# 		print("Greatt")
+# 		window.destroy()
+# 		import dashboard
+# 	elif validate==False:
+# 		print("try again")
 
+
+	
 # add widgets here
 window=Tk()
 window.title('Expense Tracker')
@@ -78,10 +80,10 @@ label.place(x=60, y=30)
 #Username
 lbl=Label(window, text="Username:", fg='black',bg='#fff', font=("Verdana", 12))
 lbl.place(x=60, y=105)
-# userfld=Entry(window,width=40,bg='#f7f7f7',font=large_font)
-# userfld.place(x=63, y=140)
 userfld=Entry(window,width=40,bg='#f7f7f7')
-userfld.grid(row=7,column=3)
+userfld.place(x=63, y=140)
+# userfld=Entry(window,width=40,bg='#f7f7f7')
+# userfld.grid(row=7,column=3)
 
 #Password
 lb2=Label(window, text="Password:", fg='black',bg='#fff', font=("Verdana", 12))
@@ -94,6 +96,27 @@ passwfld.place(x=63, y=210)
 # img = PhotoImage(file="images/signin.png").subsample(3, 3)
 # btn1.config(image=img,bg='#fff')
 # btn1.place(x=250, y=245)
+
+
+
+def login_btn():
+	user= userfld.get()
+	passw= passwfld.get()
+	# os.system('validate.py')
+	
+	if validate(user,passw):
+		window.destroy()
+		import dashboard
+	else:
+		window.destroy()
+
+	
+
+def register_btn():
+	window.destroy()
+	import register
+
+
 
 btn1=Button(window,text="Sign in",
 	compound=CENTER,font=("Verdana", 12,"bold"),
