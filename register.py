@@ -1,6 +1,12 @@
 from tkinter import *
 from tkinter.messagebox import showinfo,showerror
 import mysql.connector
+from tkinter import ttk 
+import mysql.connector
+from mysql.connector import Error
+from PIL import Image
+from datetime import date
+from tkinter import messagebox
 
 conn = mysql.connector.connect(host = "localhost",database="expense", user = "root" , passwd = "2812" )
 if conn.is_connected():
@@ -12,6 +18,12 @@ if conn.is_connected():
     record=cursor.fetchone()
     print("you are connected to database",record)
     cursor.execute("create table if not exists users (id int(11) not null AUTO_INCREMENT PRIMARY KEY,user_name varchar(255),password varchar(255))")
+
+
+def back():
+    reg_window.destroy()
+    import main
+    
 
 def register():
     usr = regUser.get()
@@ -40,34 +52,43 @@ def register():
             conn.close()
             # reg_window.destroy()# now close form window
 
-        copyri8 = Label(reg_window,text='Designed and developed by: Bappaditya Mandal',bg='powder blue')
-        copyri8.pack(side=BOTTOM,pady=3)    
-
 reg_window = Tk()
-reg_window.title("Registration")
-reg_window.geometry('800x400')
+reg_window.title("Registration - Expense Tracker")
+reg_window.geometry("415x400")
 reg_window.config(bg='#fff')
-# formName = Label(reg_window,text='New User Registration',fg='black',font=("Verdana", 12))
-# formName.pack()
+logo = PhotoImage(file = 'images/logo.png') 
+reg_window.iconphoto(False, logo)
 
-L1 = Label(reg_window,text='User Name*',fg='black',font=("Verdana", 12))
-L1.place(x=30,y=100)
-regUser=Entry(reg_window)
-regUser.place(x=140,y=100)
+
+image = PhotoImage(file='images/logo.png')
+image = image.subsample(5, 5) # divide by 4
+label = Label(image=image, bg="#fff")
+label.place(x=170, y=30)
+
+L1 = Label(reg_window,text='User Name*',fg='black',bg='#fff',font=("Verdana", 12))
+L1.place(x=50,y=170)
+regUser=Entry(reg_window,bg="#f7f7f7",width=22)
+regUser.place(x=220,y=170)
 #       Get user password ========================
-L3 = Label(reg_window,text='Enter Password*',fg='black',font=("Verdana", 12))
-L3.place(x=30,y=160)
-regPass = Entry(reg_window)
-regPass.place(x=140,y=160)
+L3 = Label(reg_window,text='Enter Password*',fg='black',bg='#fff',font=("Verdana", 12))
+L3.place(x=50,y=200)
+regPass = Entry(reg_window,bg="#f7f7f7",width=22)
+regPass.place(x=220,y=200)
 #       confirm password==========================
-L4 = Label(reg_window,text='Confirm Password*',fg='black',font=("Verdana", 12))
-L4.place(x=30,y=185)
-confirm = Entry(reg_window)
-confirm.place(x=140,y=185)
+L4 = Label(reg_window,text='Confirm Password*',fg='black',bg='#fff',font=("Verdana", 12))
+L4.place(x=50,y=230)
+confirm = Entry(reg_window,bg="#f7f7f7",width=22)
+confirm.place(x=220,y=230)
 
-submit = Button(reg_window,text='Register',fg='white',bg='green',width=30,command=register)
-submit.place(x=200,y=200)
+submit = Button(reg_window,text='Register',compound=CENTER,font=("Verdana", 12,"bold"),fg='#fff',bd = 0,activeforeground="black",command=register)
+img2 = PhotoImage(file="images/2.png").subsample(3, 3)
+submit.configure(image=img2,bg='#fff')
+submit.place(x=220,y=270)
 
+back = Button(reg_window,text='Sign In',compound=CENTER,font=("Verdana", 12,"bold"),fg='#fff',bd = 0,activeforeground="black",command=back)
+img1 = PhotoImage(file="images/1.png").subsample(3, 3)
+back.configure(image=img1,bg='#fff')
+back.place(x=50,y=270)
 
 
         
