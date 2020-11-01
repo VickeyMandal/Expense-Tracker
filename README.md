@@ -27,3 +27,5 @@ pip install mysql-connector-python
  <h2>Add Expense</h2><br>
  <img src="https://github.com/VickeyMandal/Expense-Tracker/blob/master/Screenshot/ADD%20EXPENSE.PNG" alt="Main">
 </P>
+<h2>Logo credits goes to: </h2>
+<div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
