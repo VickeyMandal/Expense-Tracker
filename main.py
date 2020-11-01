@@ -4,11 +4,11 @@ from mysql.connector import Error
 from validate import validate
 from PIL import Image
 
-
+#Initializing window of the program and its attributes
 window=Tk()
 window.title('Expense Tracker')
 window.geometry("420x400")
-window.configure(bg='#fff')
+window.configure(bg='#fff')#background color
 logo = PhotoImage(file = 'images/logo.png') 
 window.iconphoto(False, logo)
 
@@ -18,15 +18,17 @@ image = image.subsample(5, 5) # divide by 4
 label = Label(image=image, bg="#fff")
 label.place(x=165, y=30)
 
-#Username
+
+
+#-------------------LABELS-------------------#
+
+#Username Entry field
 lbl=Label(window, text="Username:", fg='black',bg='#fff', font=("Verdana", 12))
 lbl.place(x=60, y=145)
 userfld=Entry(window,width=49,bg='#f7f7f7')
 userfld.place(x=63, y=180)
-# userfld=Entry(window,width=40,bg='#f7f7f7')
-# userfld.grid(row=7,column=3)
 
-#Password
+#Password Entry field
 lb2=Label(window, text="Password:", fg='black',bg='#fff', font=("Verdana", 12))
 lb2.place(x=60, y=215)
 passwfld=Entry(window,width=49,bg='#f7f7f7',show="*")
@@ -34,8 +36,9 @@ passwfld.place(x=63, y=250)
 
 
 
+#-------------------FUNCTIONS-------------------#
 
-
+# Login button function
 def login_btn():
 	user= userfld.get()
 	passw= passwfld.get()
@@ -47,14 +50,17 @@ def login_btn():
 	else:
 		window.destroy()
 
-	
 
+# Register button function
 def register_btn():
 	window.destroy()
 	import register
 
 
 
+#-------------------BUTTONS-------------------#
+
+# Signin button
 btn1=Button(window,text="Sign in",
 	compound=CENTER,font=("Verdana", 12,"bold"),
 	fg='#fff',
@@ -65,7 +71,7 @@ img = PhotoImage(file="images/1.png").subsample(3, 3)
 btn1.config(image=img,bg='#fff')
 btn1.place(x=220, y=300)
 
-
+# Register button
 btn2=Button(window,text="Register",
 	compound=CENTER,font=("Verdana", 12,"bold"),
 	fg='#fff',

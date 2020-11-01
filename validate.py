@@ -1,9 +1,7 @@
 import mysql.connector
 from mysql.connector import Error
-import sys
-import os
 
-
+#-------------------DATABASE CONNECTION-------------------#
 
 conn = mysql.connector.connect(host = "localhost", user = "root" , passwd = "2812" )
 if conn.is_connected():
@@ -19,6 +17,9 @@ if conn.is_connected():
 else:
 	print("Connection Failed!")
 
+
+#-------------------FUNCTIONS-------------------#
+
 def validate(user,passw):
 
 	cursor.execute("SELECT user_name,password FROM users")
@@ -31,9 +32,5 @@ def validate(user,passw):
 	except Error as e:
 		print("Error occured")
 
-	# if validate==True:
-	# 	print("Greatt")
-		
-	# elif validate==False:
-	# 	print("try again")
+
 

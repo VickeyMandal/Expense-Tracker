@@ -5,12 +5,15 @@ from mysql.connector import Error
 from PIL import Image
 from datetime import date
 from tkinter import messagebox
+from addexpense import addpop
+
+
+#-------------------DATABASE CONNECTION-------------------#
 
 conn = mysql.connector.connect(host = "localhost", user = "root" , passwd = "2812" )
 cursor=conn.cursor()
 
 if conn.is_connected():
-	# cursor.execute("create database if not exists spent")
 	cursor.execute("use expense")
 	cursor.execute("select database()")
 	record=cursor.fetchone()
@@ -23,7 +26,7 @@ else:
 	print("Connection Failed!")
 
 
-
+#Initializing window of the program and its attributes
 
 dash=Tk()
 dash.geometry('800x400')
@@ -32,96 +35,29 @@ dash.title("Dashboard - Expense Tracker")
 logo = PhotoImage(file = 'images/logo.png') 
 dash.iconphoto(False, logo)
 
+
+
+#-------------------LABELS-------------------#
+
 l1=Label(dash,text='Records',font=("Verdana", 12,"bold"),bg="orange",)
 l1.grid(ipadx=4)
-
-
 n=Label(dash, text="Name",bg='#fff', font=("Verdana", 8,"bold")).grid(row=2, column=0,padx=20)
 a=Label(dash, text="Amount",bg='#fff', font=("Verdana", 8,"bold")).grid(row=2, column=1,padx=20)
 c=Label(dash, text="Category",bg='#fff', font=("Verdana", 8,"bold")).grid(row=2, column=2,padx=20)
 d=Label(dash, text="Date",bg='#fff', font=("Verdana", 8,"bold")).grid(row=2, column=3,padx=20)
 
 
-def addpop():
+# total spent label
+ttlspent=Label(dash, text="Total Spent:",width=15, fg='black',bg='orange', font=("Verdana", 12))
+ttlspent.place(x=495, y=140)
 
-	addroot = Tk()
-	addroot.geometry('250x250')
-	addroot.title("Add Expense")
-	addroot.configure(bg='#fff')
+# category label
+exp_cat2=Label(dash, text="By Category:", fg='black',bg='#fff', font=("Verdana", 12))
+exp_cat2.place(x=490, y=170)
 
+#-------------------FUNCTIONS-------------------#
 
-
-	def log():
-
-		try:
-			name1=namefld.get()
-			amount1=amtfld.get()
-			category1=catfld.get()
-			date1 = str(date.today())
-			val = (name1,amount1,category1,date1)	   
-			query1 = "insert into spent VALUES (id,%s,%s,%s,%s)"
-			cursor.execute(query1,val)
-			conn.commit()
-			messagebox.showinfo("showinfo", "Entered succesfully")
-			addroot.destroy()
-		except Error as e:
-			messagebox.showinfo("showerror", "Error occured")
-
-
-	def closepop():
-		addroot.destroy()
-	
-
-	exp_name=Label(addroot, text="Name:", fg='black',bg='#fff', font=("Verdana", 12))
-	exp_name.place(x=20, y=25)
-	namefld=Entry(addroot,width=22,bg='#f7f7f7')
-	namefld.place(x=24, y=50)
-
-
-	exp_amt=Label(addroot, text="Amount:", fg='black',bg='#fff', font=("Verdana", 12))
-	exp_amt.place(x=20, y=80)
-	amtfld=Entry(addroot,width=22,bg='#f7f7f7')
-	amtfld.place(x=24, y=105)
-
-
-	exp_cat=Label(addroot, text="Category:", fg='black',bg='#fff', font=("Verdana", 12))
-	exp_cat.place(x=20, y=135)
-	n = StringVar() 
-	catfld = ttk.Combobox(addroot, width = 27, textvariable = n)
-	catfld['values'] = ('Appliances',  
-                          'Garments', 
-                          'Food', 
-                          'Essentials',
-                          'Electrionics',
-                          'Home',
-                          'Travel',
-                          'Stationery',
-                          'Misc')
-
-	catfld.place(x=24, y=160)
-
-
-	add=Button(addroot,text="Add",
-	compound=CENTER,font=("Verdana", 12,"bold"),
-	fg='#fff',
-	bd = 0,
-	activeforeground="black",
-	command=log)
-	add.configure(bg='orange')
-	add.place(x=20, y=200)
-
-
-	close=Button(addroot,text="close",
-	compound=CENTER,font=("Verdana", 12,"bold"),
-	fg='#fff',
-	bd = 0,
-	activeforeground="black",
-	command=closepop)
-	close.configure(bg='red')
-	close.place(x=80, y=200)
-
-
-
+# Showall button function & display every item in table
 def showall():
 		clear()
 		data = readfromdatabase()
@@ -132,26 +68,21 @@ def showall():
 					          	Label(dash, text=dat[4],bg='#fff', font=("Verdana", 8)).grid(row=index+3, column=3,padx=20)
 
 
-
+# Fetches data from Tables Spent
 def readfromdatabase():
     cursor.execute("SELECT * FROM spent limit 0,15")
     return cursor.fetchall()
 
-
+# Fetches to total amount spent
 def showtotal():
 	my_str = StringVar()
-	# add one Label 
 	label2 = Label(dash,  textvariable=my_str, width=11,fg='red', font=("Verdana", 12) )  
 	label2.place(x=660, y=140) 
-
-	# my_str.set("Output")
-
 	cursor.execute("select sum(amount) from spent")
 	ttl = cursor.fetchone()
 	my_str.set(ttl)
-	# print(ttl)
-    
-
+	
+# Displays category items
 def showbycategory():
 	data = showby()
 	for index, dat in enumerate(data):
@@ -160,7 +91,7 @@ def showbycategory():
 					        Label(dash, text=dat[3],bg='#fff', font=("Verdana", 8)).grid(row=index+3, column=2,padx=20)
 					        Label(dash, text=dat[4],bg='#fff', font=("Verdana", 8)).grid(row=index+3, column=3,padx=20)
 
-
+# clears the table displayed
 def clear():
 	data = readfromdatabase()
 	
@@ -170,23 +101,19 @@ def clear():
 					        Label(dash, text="                      ",bg='#fff',).grid(row=index+3, column=2,padx=20)
 					        Label(dash, text="                      ",bg='#fff',).grid(row=index+3, column=3,padx=20)
 
-
+# Fetches to total amount spent by category
 def categorysum():
 
 	my_str = StringVar()
-	# add one Label 
-
 	label2 = Label(dash,  textvariable=my_str, width=11,fg='red', font=("Verdana", 12) )  
 	label2.place(x=660, y=140) 
-
-	# my_str.set("Output")
 	cate=catfld1.get()
 	cursor.execute("select sum(amount) FROM spent where category='{}'".format(cate))
 	ttl = cursor.fetchone()
 	my_str.set(ttl)
 
 
-
+# selects category and fetches category info
 def showby():
 	clear()
 	categorysum()
@@ -198,6 +125,12 @@ def showby():
 
 
 
+
+
+
+#-------------------DASHBOARD BUTTON-------------------#
+
+# Add expense button
 btn1=Button(dash,text="Add Expense",
 	compound=CENTER,font=("Verdana", 12,"bold"),
 	fg='#fff',
@@ -208,6 +141,7 @@ img = PhotoImage(file="images/1.png").subsample(3, 3)
 btn1.configure(image=img,bg='#fff')
 btn1.place(x=640, y=20)
 
+# showall button
 btn22=Button(dash,text="Show All",
 	compound=CENTER,font=("Verdana", 12,"bold"),
 	fg='#fff',
@@ -218,29 +152,19 @@ img22 = PhotoImage(file="images/2.png").subsample(3, 3)
 btn22.configure(image=img22,bg='#fff')
 btn22.place(x=490, y=80)
 
-
+# total spent button
 btn_total=Button(dash,text="Total Spent",
 	compound=CENTER,font=("Verdana", 12,"bold"),
 	fg='#fff',
 	bd = 0,
 	activeforeground="black",
 	command=showtotal)
-# img22 = PhotoImage(file="images/2.png").subsample(3, 3)
 btn_total.configure(image=img22,bg='#fff')
 btn_total.place(x=640, y=80)
 
 
-ttlspent=Label(dash, text="Total Spent:",width=15, fg='black',bg='orange', font=("Verdana", 12))
-ttlspent.place(x=495, y=140)
 
-
-
-
-
-exp_cat2=Label(dash, text="By Category:", fg='black',bg='#fff', font=("Verdana", 12))
-exp_cat2.place(x=490, y=170)
-	# catfld=Entry(addroot,width=22,bg='#f7f7f7')
-	# catfld.place(x=24, y=160)
+#  category combobox
 ca = StringVar() 
 catfld1 = ttk.Combobox(dash, width = 27, textvariable = ca)
 catfld1['values'] = ('Appliances',  
@@ -255,7 +179,7 @@ catfld1['values'] = ('Appliances',
 
 catfld1.place(x=495, y=200)
 
-
+# show button
 btn3=Button(dash,text="Show",
 	compound=CENTER,font=("Verdana", 12,"bold"),
 	fg='#fff',
